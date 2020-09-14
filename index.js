@@ -1,6 +1,4 @@
 // 1. App Layout
-    // Nav Bar - Weather Dashboard
-        // Black, Centered, White Header
     // Aside (Left) - Search for a City
         // Header
         // Search Bar (Form) & Button
@@ -45,11 +43,6 @@ $(document).ready(function(){
     // Variables
     
     // Element Variables
-    var  navBar = $(".navbar");
-    var span = $("#span");
-    navBar.addClass("navbar-dark bg-dark");
-    span.addClass("navbar-brand h1");
-    span.attr("style", "font-size: 30px");
 
     // Function Definitions
 
