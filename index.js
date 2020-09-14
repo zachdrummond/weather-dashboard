@@ -39,12 +39,11 @@ $(document).ready(function(){
 
     // Variables
     var APIkey = "a7ccd0a4c74bf45b3a12a4b9c719a4f6";
-    var queryURL = "api.openweathermap.org/data/2.5/weather?q=" + userCity +"&appid=" + APIkey;
     
     // Element Variables
     var asideDiv = $("#asideDiv");
     var userInput = $("#userInput");
-    var userCity = userInput.val();
+
     var searchBtn = $("#searchBtn");
 
     var weatherDiv = $("#weatherDiv");
@@ -53,8 +52,26 @@ $(document).ready(function(){
     // Function Definitions
 
     // Function Calls
+    function displayCurrentWeather(response){
+        var cityHeader = $("<h3>");
+        cityHeader.text(response.name);
+        weatherDiv.append(cityHeader);
+    }
 
     // Event Listeners
-
+    searchBtn.on("click", function(event){
+        event.preventDefault();
+        
+        var userCity = userInput.val()
+        var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + userCity +"&appid=" + APIkey;
+        
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function (response){
+            console.log(response);
+            displayCurrentWeather(response);
+        });
+    })
 
 });
