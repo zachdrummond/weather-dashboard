@@ -1,7 +1,5 @@
 // 1. App Layout
     // Aside (Left) - Search for a City
-        // Header
-        // Search Bar (Form) & Button
         // Loads Bars of previously search cities
     // Card - City's Weather for Today
         // Left-Aligned
@@ -11,7 +9,6 @@
         // Wind Speed
         // UV Index - In a Box
     // 5-Day Forecast
-        // Header - 5-Day Forecast:
         // 5 Blue Boxes with White Text
         // Month/Day/Year
         // Weather Icon
@@ -41,8 +38,17 @@
 $(document).ready(function(){
 
     // Variables
+    var APIkey = "a7ccd0a4c74bf45b3a12a4b9c719a4f6";
+    var queryURL = "api.openweathermap.org/data/2.5/weather?q=" + userCity +"&appid=" + APIkey;
     
     // Element Variables
+    var asideDiv = $("#asideDiv");
+    var userInput = $("#userInput");
+    var userCity = userInput.val();
+    var searchBtn = $("#searchBtn");
+
+    var weatherDiv = $("#weatherDiv");
+    var forecastDiv = $("#forecastDiv");
 
     // Function Definitions
 

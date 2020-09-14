@@ -20,26 +20,26 @@
     <!-- Link to CSS File -->
     <link rel="stylesheet" href="style.css" />
   </head>
+
   <body>
     <!-- Bootstrap Navbar - Weather Dashboard -->
     <nav class="navbar navbar-dark bg-dark">
       <div class="container justify-content-center">
-        <span id="span" class="navbar-brand mb-0 h1">Weather Dashboard</span>
+        <span class="navbar-brand mb-0 h1">Weather Dashboard</span>
       </div>
     </nav>
 
     <!-- Main Container -->
     <main class="row">
-      
       <!-- Aside Column - Search for a City -->
       <aside class="card col-sm-4 pr-0">
-        <div class="card-body bg-light">
+        <div id="asideDiv" class="card-body bg-light">
           <h5>Search for a City:</h5>
 
           <form class="form-inline">
             <!-- Search Bar -->
-            <input id="searchInput" type="text" class="form-control" />
-           
+            <input id="userInput" type="text" class="form-control" />
+
             <!-- Search Button -->
             <button id="searchBtn" type="submit" class="btn btn-primary">
               <svg
@@ -62,23 +62,21 @@
             </button>
           </form>
         </div>
-    </aside>
-    <section class="col-sm-8">
+      </aside>
+      <section class="col-sm-8">
         <!-- Sub Row - Today's Weather -->
         <div class="row">
-            <div class="card col-sm-12">
-                <div class="card-body">
-
-                </div>
-            </div>
+          <div class="card col-sm-12">
+            <div id="weatherDiv" class="card-body"></div>
+          </div>
         </div>
         <!-- 2nd Sub Row - 5-Day Forecast -->
-        <div class="row">
-            <div class="col-sm-12">
-                <h4>5-Day Forecast:</h4>
-            </div>
+        <div class="row mt-4">
+          <div id="forecastDiv" class="col-sm-12">
+            <h4>5-Day Forecast:</h4>
+          </div>
         </div>
-    </section>
+      </section>
     </main>
 
     <!-- Link to jquery -->
