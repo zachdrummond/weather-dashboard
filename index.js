@@ -1,17 +1,3 @@
-// 1. App Layout
-// Aside (Left) - Search for a City
-// Loads Bars of previously search cities
-// Card - City's Weather for Today
-// UV Index - In a Box
-// 2. OpenWeather API Research
-// City for Today
-// UV Index - In a Box
-// 3. Functionality
-// Add what the user searches into local storage and display below search bar
-// UV Index Color - Favorable, Moderate, or Severe Weather Conditions
-// User clicks previous city in search history, get from local storage and update screen
-// When app opens, last searched city forecast displays
-
 $(document).ready(function () {
   // Variables
   var APIkey = "a7ccd0a4c74bf45b3a12a4b9c719a4f6";
@@ -21,7 +7,7 @@ $(document).ready(function () {
   // Element Variables
   var asideDiv = $("#asideDiv");
   var userInput = $("#userInput");
-  var previousCitiesUl = $("#previousCities");
+  var previousCitiesDiv = $("#previousCities");
   var searchBtn = $("#searchBtn");
   var weatherDiv = $("#weatherDiv");
   var forecastDiv = $("#forecastDiv");
@@ -50,26 +36,7 @@ $(document).ready(function () {
     weatherDiv.append(windSpeed);
 
     var uvIndex = response.current.uvi;
-    var uvIndexHeader = $("<p>UV Index: </p>");
-    var uvIndexText = $("<span id='uvIndex'>" + uvIndex + "</span>");
-    console.log(uvIndexText);
-    uvIndexHeader.text("UV Index: ").append(uvIndexText);
-    if(uvIndex < 3){
-      uvIndexText.attr("style", "background-color: green");
-    }
-    else if( uvIndex < 6){
-      uvIndexText.attr("style", "background-color: yellow");
-    }
-    else if(uvIndex < 8){
-      uvIndexText.attr("style", "background-color: orange");
-    }
-    else if(uvIndex < 11){
-      uvIndexText.attr("style", "background-color: red");
-    }
-    else{
-      uvIndexText.attr("style", "background-color: purple");
-    }
-    weatherDiv.append(uvIndexHeader);
+    displayUVIndex(uvIndex);
   }
 
   // Function - Displays the 5-Day Forecast for the User's City
@@ -102,14 +69,41 @@ $(document).ready(function () {
     }
   }
 
+  // Function - Creates the UV Index Header, Sets the Background Color, and Displays it on the App
+  function displayUVIndex(uvIndex){
+    var uvIndexHeader = $("<p>UV Index: </p>");
+    var uvIndexText = $("<span id='uvIndex'>" + uvIndex + "</span>");
+
+    uvIndexHeader.text("UV Index: ").append(uvIndexText);
+    if(uvIndex < 3){
+      uvIndexText.attr("style", "background-color: green");
+    }
+    else if( uvIndex < 6){
+      uvIndexText.attr("style", "background-color: yellow");
+    }
+    else if(uvIndex < 8){
+      uvIndexText.attr("style", "background-color: orange");
+    }
+    else if(uvIndex < 11){
+      uvIndexText.attr("style", "background-color: red");
+    }
+    else{
+      uvIndexText.attr("style", "background-color: purple");
+    }
+    weatherDiv.append(uvIndexHeader);
+  }
+
   // Event Listener - Listens to the Search Button
   searchBtn.on("click", function (event) {
     event.preventDefault();
+
+    weatherDiv.empty();
+    forecastDiv.empty();
     
     var userCity = userInput.val();
     if(userCity !== ""){
-      var previousCitiesLi = $("<button class ='list-group-item'>" + userCity + "</button>");
-      previousCitiesUl.append(previousCitiesLi);
+      var previousCitiesBtn = $("<button class ='list-group-item'>" + userCity + "</button>");
+      previousCitiesDiv.append(previousCitiesBtn);
       userCityArray.push(userCity);
       localStorage.setItem("City", JSON.stringify(userCityArray));
     }
