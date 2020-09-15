@@ -2,23 +2,10 @@
 // Aside (Left) - Search for a City
 // Loads Bars of previously search cities
 // Card - City's Weather for Today
-// Header - City (Date) Weather Icon
 // UV Index - In a Box
-// 5-Day Forecast
-// 5 Blue Boxes with White Text
-// Month/Day/Year
-// Weather Icon
-// Temp:
-// Humidity:
 // 2. OpenWeather API Research
 // City for Today
-// Weather Icon
 // UV Index - In a Box
-// 5 Day Forecast
-// Date
-// Weather Icon
-// Temp:
-// Humidity
 // 3. Functionality
 // Add what the user searches into local storage and display below search bar
 // UV Index Color - Favorable, Moderate, or Severe Weather Conditions
@@ -29,10 +16,12 @@ $(document).ready(function () {
   // Variables
   var APIkey = "a7ccd0a4c74bf45b3a12a4b9c719a4f6";
   var units = "&units=imperial";
+  var userCityArray = [];
 
   // Element Variables
   var asideDiv = $("#asideDiv");
   var userInput = $("#userInput");
+  var previousCitiesUl = $("#previousCities");
   var searchBtn = $("#searchBtn");
   var weatherDiv = $("#weatherDiv");
   var forecastDiv = $("#forecastDiv");
@@ -43,50 +32,68 @@ $(document).ready(function () {
     var dateConversion = new Date(response.current.dt * 1000);
     var date = dateConversion.getMonth() + "/" + dateConversion.getDate() + "/" + dateConversion.getFullYear();
 
-    cityHeader.text(userInput.val() + " (" + date + ")");
-    cityHeader.attr("style", "margin-bottom: 20px");
-    weatherDiv.append(cityHeader);
-
     var weatherIconEl = $("<img>");
     var weatherIcon = response.current.weather[0].icon;
     var weatherIconURL =
       "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
     weatherIconEl.attr("src", weatherIconURL);
-    weatherDiv.append(weatherIconEl);
+    cityHeader.text(userInput.val() + " (" + date + ")").append(weatherIconEl);
+    weatherDiv.append(cityHeader);
 
-    var temp = $("<h6>Temperature: " + response.current.temp + "&deg;F</h6>");
+    var temp = $("<p>Temperature: " + response.current.temp + "&deg;F</p>");
     weatherDiv.append(temp);
 
-    var humidity = $("<h6>Humidity: " + response.current.humidity + "%</h6>");
+    var humidity = $("<p>Humidity: " + response.current.humidity + "%</p>");
     weatherDiv.append(humidity);
 
-    var windSpeed = $(
-      "<h6>Wind Speed: " + response.current.wind_speed + " MPH </h6>"
-    );
+    var windSpeed = $("<p>Wind Speed: " + response.current.wind_speed + " MPH </p>");
     weatherDiv.append(windSpeed);
 
-    var uvIndex = $("<h6>UV Index: " + response.current.uvi + "</h6>");
-    weatherDiv.append(uvIndex);
+    var uvIndex = response.current.uvi;
+    var uvIndexHeader = $("<p>UV Index: </p>");
+    var uvIndexText = $("<span id='uvIndex'>" + uvIndex + "</span>");
+    console.log(uvIndexText);
+    uvIndexHeader.text("UV Index: ").append(uvIndexText);
+    if(uvIndex < 3){
+      uvIndexText.attr("style", "background-color: green");
+    }
+    else if( uvIndex < 6){
+      uvIndexText.attr("style", "background-color: yellow");
+    }
+    else if(uvIndex < 8){
+      uvIndexText.attr("style", "background-color: orange");
+    }
+    else if(uvIndex < 11){
+      uvIndexText.attr("style", "background-color: red");
+    }
+    else{
+      uvIndexText.attr("style", "background-color: purple");
+    }
+    weatherDiv.append(uvIndexHeader);
   }
 
   // Function - Displays the 5-Day Forecast for the User's City
   function displayForecastWeather(response) {
-    var forecastHeader = $("<h4>5-Day Forecast:</h4>");
+    
+    var forecastHeader = $("<h3>5-Day Forecast:</h3>");
     forecastDiv.append(forecastHeader);
+
     for (var i = 0; i < 5; i++) {
       var day = $("<div>");
       day.attr("class", "card text-white bg-primary mb-3 text-center");
-      day.attr("style", "width: 8rem");
+      day.attr("style", "max-width: 8rem");
       var dateConversion = new Date(response[i].dt * 1000);
       var date = dateConversion.getMonth() + "/" + dateConversion.getDate() + "/" + dateConversion.getFullYear();
       var dateHeader = $("<h5>" + date + "</h5>");
       day.append(dateHeader);
+     
       var weatherIconEl = $("<img>");
       var weatherIcon = response[i].weather[0].icon;
       var weatherIconURL =
         "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
       weatherIconEl.attr("src", weatherIconURL);
       day.append(weatherIconEl);
+      
       var temp = $("<p> Temp: " + response[i].temp.day + "&deg;F</p>");
       day.append(temp);
       var humidity = $("<p>Humidity: " + response[i].humidity + "%</p>");
@@ -98,8 +105,15 @@ $(document).ready(function () {
   // Event Listener - Listens to the Search Button
   searchBtn.on("click", function (event) {
     event.preventDefault();
-
+    
     var userCity = userInput.val();
+    if(userCity !== ""){
+      var previousCitiesLi = $("<button class ='list-group-item'>" + userCity + "</button>");
+      previousCitiesUl.append(previousCitiesLi);
+      userCityArray.push(userCity);
+      localStorage.setItem("City", JSON.stringify(userCityArray));
+    }
+
     var queryURL =
       "https://api.openweathermap.org/data/2.5/weather?q=" +
       userCity +
