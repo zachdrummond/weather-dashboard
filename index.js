@@ -33,21 +33,26 @@ $(document).ready(function () {
   // Element Variables
   var asideDiv = $("#asideDiv");
   var userInput = $("#userInput");
-
   var searchBtn = $("#searchBtn");
-
   var weatherDiv = $("#weatherDiv");
   var forecastDiv = $("#forecastDiv");
 
-  // Function Definitions
-
-  // Function Calls
+  // Function - Displays Today's Weather for the User's City
   function displayCurrentWeather(response) {
     var cityHeader = $("<h3>");
-    cityHeader.text(userInput.val());
-    //console.log(response.weather[0].icon));
+    var dateConversion = new Date(response.current.dt * 1000);
+    var date = dateConversion.getMonth() + "/" + dateConversion.getDate() + "/" + dateConversion.getFullYear();
+
+    cityHeader.text(userInput.val() + " (" + date + ")");
     cityHeader.attr("style", "margin-bottom: 20px");
     weatherDiv.append(cityHeader);
+
+    var weatherIconEl = $("<img>");
+    var weatherIcon = response.current.weather[0].icon;
+    var weatherIconURL =
+      "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
+    weatherIconEl.attr("src", weatherIconURL);
+    weatherDiv.append(weatherIconEl);
 
     var temp = $("<h6>Temperature: " + response.current.temp + "&deg;F</h6>");
     weatherDiv.append(temp);
@@ -64,22 +69,33 @@ $(document).ready(function () {
     weatherDiv.append(uvIndex);
   }
 
+  // Function - Displays the 5-Day Forecast for the User's City
   function displayForecastWeather(response) {
+    var forecastHeader = $("<h4>5-Day Forecast:</h4>");
+    forecastDiv.append(forecastHeader);
     for (var i = 0; i < 5; i++) {
-      var day1 = $("<div>");
-      day1.attr("class", "card text-white bg-primary mb-3 text-center");
-      day1.attr("style", "width: 8rem");
-      var dateHeader = $("<h5> Insert Date" + "</h5>");
-      day1.append(dateHeader);
+      var day = $("<div>");
+      day.attr("class", "card text-white bg-primary mb-3 text-center");
+      day.attr("style", "width: 8rem");
+      var dateConversion = new Date(response[i].dt * 1000);
+      var date = dateConversion.getMonth() + "/" + dateConversion.getDate() + "/" + dateConversion.getFullYear();
+      var dateHeader = $("<h5>" + date + "</h5>");
+      day.append(dateHeader);
+      var weatherIconEl = $("<img>");
+      var weatherIcon = response[i].weather[0].icon;
+      var weatherIconURL =
+        "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
+      weatherIconEl.attr("src", weatherIconURL);
+      day.append(weatherIconEl);
       var temp = $("<p> Temp: " + response[i].temp.day + "&deg;F</p>");
-      day1.append(temp);
+      day.append(temp);
       var humidity = $("<p>Humidity: " + response[i].humidity + "%</p>");
-      day1.append(humidity);
-      forecastDiv.append(day1);
+      day.append(humidity);
+      forecastDiv.append(day);
     }
   }
 
-  // Event Listeners
+  // Event Listener - Listens to the Search Button
   searchBtn.on("click", function (event) {
     event.preventDefault();
 
@@ -91,10 +107,12 @@ $(document).ready(function () {
       APIkey +
       units;
 
+    // AJAX - Calls the OpenWeather Current Weather Data API
     $.ajax({
       url: queryURL,
       method: "GET",
     }).then(function (response1) {
+      // Variables set to the Latitude and Longitude of the User's City
       var lat = response1.coord.lat;
       var long = response1.coord.lon;
       queryURL =
@@ -106,6 +124,7 @@ $(document).ready(function () {
         APIkey +
         units;
 
+      // AJAX - Calls the OpenWeather One Call API
       $.ajax({
         url: queryURL,
         method: "GET",
