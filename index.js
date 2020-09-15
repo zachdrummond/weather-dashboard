@@ -55,7 +55,22 @@ $(document).ready(function(){
     function displayCurrentWeather(response){
         var cityHeader = $("<h3>");
         cityHeader.text(response.name);
+        //console.log(response.weather[0].icon));
+        cityHeader.attr("style", "margin-bottom: 20px");
         weatherDiv.append(cityHeader);
+
+        var temp = $("<h6> Temperature: " + response.main.temp + "&deg;F</h6>");
+        weatherDiv.append(temp);
+
+        var humidity = $("<h6> Humidity: " + response.main.humidity + "%</h6>");
+        weatherDiv.append(humidity);
+
+        var windSpeed = $("<h6> Wind Speed: " + response.wind.speed  + " MPH </h6>");
+        weatherDiv.append(windSpeed);
+
+        // var uvIndex = $("<h6>");
+        // uvIndex.text("UV Index: " + response.wind.speed);
+        // weatherDiv.append(uvIndex);
     }
 
     // Event Listeners
@@ -63,7 +78,7 @@ $(document).ready(function(){
         event.preventDefault();
         
         var userCity = userInput.val()
-        var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + userCity +"&appid=" + APIkey;
+        var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + userCity +"&appid=" + APIkey + "&units=imperial";
         
         $.ajax({
             url: queryURL,
