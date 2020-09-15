@@ -2,11 +2,7 @@
     // Aside (Left) - Search for a City
         // Loads Bars of previously search cities
     // Card - City's Weather for Today
-        // Left-Aligned
         // Header - City (Date) Weather Icon
-        // Temperature
-        // Humidity
-        // Wind Speed
         // UV Index - In a Box
     // 5-Day Forecast
         // 5 Blue Boxes with White Text
@@ -15,13 +11,8 @@
         // Temp: 
         // Humidity: 
 // 2. OpenWeather API Research
-    // Section - How to Start
-    // City Search
     // City for Today
-        // City Name, Today's Date, Weather Icon
-        // Temperature
-        // Humidity
-        // Wind Speed
+        // Weather Icon
         // UV Index - In a Box
     // 5 Day Forecast
         // Date
@@ -29,7 +20,6 @@
         // Temp:
         // Humidity
 // 3. Functionality
-    // AJAX Call - Weather for City
     // Add what the user searches into local storage and display below search bar
     // UV Index Color - Favorable, Moderate, or Severe Weather Conditions
     // User clicks previous city in search history, get from local storage and update screen
@@ -54,23 +44,22 @@ $(document).ready(function(){
     // Function Calls
     function displayCurrentWeather(response){
         var cityHeader = $("<h3>");
-        cityHeader.text(response.name);
+        cityHeader.text(userInput.val());
         //console.log(response.weather[0].icon));
         cityHeader.attr("style", "margin-bottom: 20px");
         weatherDiv.append(cityHeader);
 
-        var temp = $("<h6> Temperature: " + response.main.temp + "&deg;F</h6>");
+        var temp = $("<h6> Temperature: " + response.current.temp + "&deg;F</h6>");
         weatherDiv.append(temp);
 
-        var humidity = $("<h6> Humidity: " + response.main.humidity + "%</h6>");
+        var humidity = $("<h6> Humidity: " + response.current.humidity + "%</h6>");
         weatherDiv.append(humidity);
 
-        var windSpeed = $("<h6> Wind Speed: " + response.wind.speed  + " MPH </h6>");
+        var windSpeed = $("<h6> Wind Speed: " + response.current.wind_speed  + " MPH </h6>");
         weatherDiv.append(windSpeed);
 
-        // var uvIndex = $("<h6>");
-        // uvIndex.text("UV Index: " + response.wind.speed);
-        // weatherDiv.append(uvIndex);
+        var uvIndex = $("<h6> UV Index: " + response.current.uvi + "</h6>");
+        weatherDiv.append(uvIndex);
     }
 
     // Event Listeners
@@ -83,9 +72,19 @@ $(document).ready(function(){
         $.ajax({
             url: queryURL,
             method: "GET"
-        }).then(function (response){
-            console.log(response);
-            displayCurrentWeather(response);
+        }).then(function (response1){
+
+            var lat = response1.coord.lat;
+            var long = response1.coord.lon;
+            queryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + long + "&exclude=minutely,hourly&appid=" + APIkey + "&units=imperial";
+
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).then(function (response2){
+                console.log(response2);
+                displayCurrentWeather(response2);
+            });
         });
     })
 
