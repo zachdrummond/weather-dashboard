@@ -11,12 +11,14 @@
 This is an app that displays a weather dashboard based on data from the OpenWeather API. The user can retrieve the current weather information (temperature, humidity, wind speed, and UV index) for any city in the world, including a 5 day forecast.
 
 ### *Usage*
-1. 
+1. Enter a City Name
+2. Hit the Search Button
+3. Click a Previously Searched City
 
 ## Design Elements
 ### *JavaScript*
 * Clean User Interface
-* 3rd Party API
+* Server-Side API
 * Dynamically Updated HTML and CSS powered by jQuery
 * Document Object Model Manipulation
 * Local Storage
@@ -36,7 +38,10 @@ This is an app that displays a weather dashboard based on data from the OpenWeat
 
 ### *Bootstrap*
 * Grid System
-* Jumbotron
+* Navbar
+* Cards
+* Form
+* Sizing
 * Spacing
 
 ### *HTML*
@@ -49,26 +54,21 @@ This is an app that displays a weather dashboard based on data from the OpenWeat
 * Semantic Elements
 * ids, Classes, and Elements
 * Buttons
-* Accessible Attributes
 * Comments
 
 ### *CSS*
-* Background
-* Height
-* Border
-* Padding & Margin
+* Padding
 * Font
-* Alignment
-* Colors
+* Color
 * Comments
 
 ## App Preview
-### * *
-![Screenshot](images/)
+### *Weather Dashboard*
+![Screenshot](picture.png)
 
 ## Links
-* Website: 
-* GitHub Repository: 
+* Website: https://zachdrummond.github.io/weather-dashboard/
+* GitHub Repository: https://github.com/zachdrummond/weather-dashboard
 
 ## Credits
 * jquery - https://api.jquery.com/
