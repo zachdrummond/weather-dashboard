@@ -3,6 +3,8 @@ $(document).ready(function () {
   var APIkey = "a7ccd0a4c74bf45b3a12a4b9c719a4f6";
   var units = "&units=imperial";
   var userCityArray = [];
+  var userCity;
+  var queryURL;
 
   // Element Variables
   var asideDiv = $("#asideDiv");
@@ -12,28 +14,38 @@ $(document).ready(function () {
   var weatherDiv = $("#weatherDiv");
   var forecastDiv = $("#forecastDiv");
 
+  // Function - Uses Local Storage to Setup the APP
+  function getLocalStorage() {
+    var city = JSON.parse(localStorage.getItem("City"));
+
+    if (city !== null){
+      userCityArray = city;
+      ajax(userCityArray[0]);
+
+      for(var i = 0; i < userCityArray.length; i++){
+        createPreviousCities(userCityArray[i]);
+      }
+    }
+  }
+
   // Function - Displays Today's Weather for the User's City
-  function displayCurrentWeather(response) {
+  function displayCurrentWeather(response, userCity) {
+    
     var cityHeader = $("<h3>");
-    var dateConversion = new Date(response.current.dt * 1000);
-    var date = dateConversion.getMonth() + "/" + dateConversion.getDate() + "/" + dateConversion.getFullYear();
+    var date = convertDate(response.current.dt);
 
     var weatherIconEl = $("<img>");
     var weatherIcon = response.current.weather[0].icon;
     var weatherIconURL =
       "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
     weatherIconEl.attr("src", weatherIconURL);
-    cityHeader.text(userInput.val() + " (" + date + ")").append(weatherIconEl);
+    cityHeader.text(userCity + " (" + date + ")").append(weatherIconEl);
     weatherDiv.append(cityHeader);
 
     var temp = $("<p>Temperature: " + response.current.temp + "&deg;F</p>");
-    weatherDiv.append(temp);
-
     var humidity = $("<p>Humidity: " + response.current.humidity + "%</p>");
-    weatherDiv.append(humidity);
-
     var windSpeed = $("<p>Wind Speed: " + response.current.wind_speed + " MPH </p>");
-    weatherDiv.append(windSpeed);
+    weatherDiv.append(temp, humidity, windSpeed);
 
     var uvIndex = response.current.uvi;
     displayUVIndex(uvIndex);
@@ -49,8 +61,7 @@ $(document).ready(function () {
       var day = $("<div>");
       day.attr("class", "card text-white bg-primary mb-3 text-center");
       day.attr("style", "max-width: 8rem");
-      var dateConversion = new Date(response[i].dt * 1000);
-      var date = dateConversion.getMonth() + "/" + dateConversion.getDate() + "/" + dateConversion.getFullYear();
+      var date = convertDate(response[i].dt);
       var dateHeader = $("<h5>" + date + "</h5>");
       day.append(dateHeader);
      
@@ -67,6 +78,17 @@ $(document).ready(function () {
       day.append(humidity);
       forecastDiv.append(day);
     }
+  }
+
+  // Function - Converts the Date Format
+  function convertDate(date){
+    var dateConversion = new Date(date * 1000);
+    date = dateConversion.getMonth() + "/" + dateConversion.getDate() + "/" + dateConversion.getFullYear();
+    return date;
+  }
+
+  function displayWeatherIcon(weatherIcon){
+
   }
 
   // Function - Creates the UV Index Header, Sets the Background Color, and Displays it on the App
@@ -93,28 +115,18 @@ $(document).ready(function () {
     weatherDiv.append(uvIndexHeader);
   }
 
-  // Event Listener - Listens to the Search Button
-  searchBtn.on("click", function (event) {
-    event.preventDefault();
+  // Function - Calls the APIs
+  function ajax(userCity){
 
     weatherDiv.empty();
     forecastDiv.empty();
-    
-    var userCity = userInput.val();
-    if(userCity !== ""){
-      var previousCitiesBtn = $("<button class ='list-group-item'>" + userCity + "</button>");
-      previousCitiesDiv.append(previousCitiesBtn);
-      userCityArray.push(userCity);
-      localStorage.setItem("City", JSON.stringify(userCityArray));
-    }
 
-    var queryURL =
-      "https://api.openweathermap.org/data/2.5/weather?q=" +
-      userCity +
-      "&appid=" +
-      APIkey +
-      units;
-
+    queryURL =
+    "https://api.openweathermap.org/data/2.5/weather?q=" +
+    userCity +
+    "&appid=" +
+    APIkey +
+    units;
     // AJAX - Calls the OpenWeather Current Weather Data API
     $.ajax({
       url: queryURL,
@@ -137,10 +149,40 @@ $(document).ready(function () {
         url: queryURL,
         method: "GET",
       }).then(function (response2) {
-        console.log(response2);
-        displayCurrentWeather(response2);
+
+        displayCurrentWeather(response2, userCity);
         displayForecastWeather(response2.daily);
       });
     });
+  }
+
+  function createPreviousCities(userCity){
+    var previousCitiesBtn = $("<button class='list-group-item'></button");
+    previousCitiesBtn.text(userCity);
+    previousCitiesDiv.append(previousCitiesBtn);
+
+    previousCitiesBtn.on("click", function(event){
+      userCity = $(this).text();
+      ajax(userCity);
+    });
+  }
+
+  getLocalStorage();
+
+  // Event Listener - Listens to the Search Button
+  searchBtn.on("click", function (event) {
+    event.preventDefault();
+
+    if(userCity !== ""){
+      
+      userCity = userInput.val();
+      ajax(userCity);
+
+
+      userCityArray.push(userCity);
+      localStorage.setItem("City", JSON.stringify(userCityArray));
+
+      createPreviousCities(userCity);
+    }
   });
 });
