@@ -20,7 +20,7 @@ $(document).ready(function () {
 
     if (city !== null) {
       userCityArray = city;
-      ajax(userCityArray[0]);
+      ajax(userCityArray[userCityArray.length - 1]);
 
       for (var i = 0; i < userCityArray.length; i++) {
         createPreviousCities(userCityArray[i]);
@@ -48,15 +48,6 @@ $(document).ready(function () {
     displayUVIndex(uvIndex);
   }
 
-  function displayWeatherIcon(weatherIcon) {
-    var weatherIconEl = $("<img>");
-    var weatherIconURL =
-    "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
-    weatherIconEl.attr("src", weatherIconURL);
-
-    return weatherIconEl;
-  }
-
   // Function - Displays the 5-Day Forecast for the User's City
   function displayForecastWeather(response) {
     var forecastHeader = $("<h3>5-Day Forecast:</h3>");
@@ -65,14 +56,14 @@ $(document).ready(function () {
     for (var i = 0; i < 5; i++) {
       var day = $("<div>");
       day.attr("class", "card text-white bg-primary mb-3 text-center");
-      day.attr("style", "max-width: 8rem");
+      day.attr("style", "max-width: 9rem");
       var date = convertDate(response[i].dt);
       var dateHeader = $("<h5>" + date + "</h5>");
 
       var weatherIconEl = displayWeatherIcon(response[i].weather[0].icon);
       var temp = $("<p> Temp: " + response[i].temp.day + "&deg;F</p>");
       var humidity = $("<p>Humidity: " + response[i].humidity + "%</p>");
-      
+
       day.append(dateHeader, weatherIconEl, temp, humidity);
       forecastDiv.append(day);
     }
@@ -90,22 +81,34 @@ $(document).ready(function () {
     return date;
   }
 
+  // Function - Displays the Weather Icon
+  function displayWeatherIcon(weatherIcon) {
+    var weatherIconEl = $("<img>");
+    var weatherIconURL =
+      "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
+    weatherIconEl.attr("src", weatherIconURL);
+    weatherIconEl.attr("alt", "Weather Icon");
+
+    return weatherIconEl;
+  }
+
   // Function - Creates the UV Index Header, Sets the Background Color, and Displays it on the App
   function displayUVIndex(uvIndex) {
     var uvIndexHeader = $("<p>UV Index: </p>");
     var uvIndexText = $("<span id='uvIndex'>" + uvIndex + "</span>");
 
+    uvIndex = 10;
     uvIndexHeader.text("UV Index: ").append(uvIndexText);
     if (uvIndex < 3) {
-      uvIndexText.attr("style", "background-color: green");
+      uvIndexText.attr("style", "background-color: LightGreen");
     } else if (uvIndex < 6) {
-      uvIndexText.attr("style", "background-color: yellow");
+      uvIndexText.attr("style", "background-color: gold");
     } else if (uvIndex < 8) {
       uvIndexText.attr("style", "background-color: orange");
     } else if (uvIndex < 11) {
-      uvIndexText.attr("style", "background-color: red");
+      uvIndexText.attr("style", "background-color: red; color: white");
     } else {
-      uvIndexText.attr("style", "background-color: purple");
+      uvIndexText.attr("style", "background-color: purple; color: white");
     }
     weatherDiv.append(uvIndexHeader);
   }

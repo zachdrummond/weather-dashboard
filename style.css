@@ -6,5 +6,8 @@
 /* Style the UV Index <span> */
 #uvIndex{
     padding: 4px !important;
-    color: white !important;
+}
+
+p {
+    font-size: 18px;
 }
