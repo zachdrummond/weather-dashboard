@@ -18,11 +18,11 @@ $(document).ready(function () {
   function getLocalStorage() {
     var city = JSON.parse(localStorage.getItem("City"));
 
-    if (city !== null){
+    if (city !== null) {
       userCityArray = city;
       ajax(userCityArray[0]);
 
-      for(var i = 0; i < userCityArray.length; i++){
+      for (var i = 0; i < userCityArray.length; i++) {
         createPreviousCities(userCityArray[i]);
       }
     }
@@ -30,7 +30,6 @@ $(document).ready(function () {
 
   // Function - Displays Today's Weather for the User's City
   function displayCurrentWeather(response, userCity) {
-    
     var cityHeader = $("<h3>");
     var date = convertDate(response.current.dt);
 
@@ -44,7 +43,9 @@ $(document).ready(function () {
 
     var temp = $("<p>Temperature: " + response.current.temp + "&deg;F</p>");
     var humidity = $("<p>Humidity: " + response.current.humidity + "%</p>");
-    var windSpeed = $("<p>Wind Speed: " + response.current.wind_speed + " MPH </p>");
+    var windSpeed = $(
+      "<p>Wind Speed: " + response.current.wind_speed + " MPH </p>"
+    );
     weatherDiv.append(temp, humidity, windSpeed);
 
     var uvIndex = response.current.uvi;
@@ -53,7 +54,6 @@ $(document).ready(function () {
 
   // Function - Displays the 5-Day Forecast for the User's City
   function displayForecastWeather(response) {
-    
     var forecastHeader = $("<h3>5-Day Forecast:</h3>");
     forecastDiv.append(forecastHeader);
 
@@ -64,14 +64,14 @@ $(document).ready(function () {
       var date = convertDate(response[i].dt);
       var dateHeader = $("<h5>" + date + "</h5>");
       day.append(dateHeader);
-     
+
       var weatherIconEl = $("<img>");
       var weatherIcon = response[i].weather[0].icon;
       var weatherIconURL =
         "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
       weatherIconEl.attr("src", weatherIconURL);
       day.append(weatherIconEl);
-      
+
       var temp = $("<p> Temp: " + response[i].temp.day + "&deg;F</p>");
       day.append(temp);
       var humidity = $("<p>Humidity: " + response[i].humidity + "%</p>");
@@ -81,52 +81,50 @@ $(document).ready(function () {
   }
 
   // Function - Converts the Date Format
-  function convertDate(date){
+  function convertDate(date) {
     var dateConversion = new Date(date * 1000);
-    date = dateConversion.getMonth() + "/" + dateConversion.getDate() + "/" + dateConversion.getFullYear();
+    date =
+      dateConversion.getMonth() +
+      "/" +
+      dateConversion.getDate() +
+      "/" +
+      dateConversion.getFullYear();
     return date;
   }
 
-  function displayWeatherIcon(weatherIcon){
-
-  }
+  function displayWeatherIcon(weatherIcon) {}
 
   // Function - Creates the UV Index Header, Sets the Background Color, and Displays it on the App
-  function displayUVIndex(uvIndex){
+  function displayUVIndex(uvIndex) {
     var uvIndexHeader = $("<p>UV Index: </p>");
     var uvIndexText = $("<span id='uvIndex'>" + uvIndex + "</span>");
 
     uvIndexHeader.text("UV Index: ").append(uvIndexText);
-    if(uvIndex < 3){
+    if (uvIndex < 3) {
       uvIndexText.attr("style", "background-color: green");
-    }
-    else if( uvIndex < 6){
+    } else if (uvIndex < 6) {
       uvIndexText.attr("style", "background-color: yellow");
-    }
-    else if(uvIndex < 8){
+    } else if (uvIndex < 8) {
       uvIndexText.attr("style", "background-color: orange");
-    }
-    else if(uvIndex < 11){
+    } else if (uvIndex < 11) {
       uvIndexText.attr("style", "background-color: red");
-    }
-    else{
+    } else {
       uvIndexText.attr("style", "background-color: purple");
     }
     weatherDiv.append(uvIndexHeader);
   }
 
   // Function - Calls the APIs
-  function ajax(userCity){
-
+  function ajax(userCity) {
     weatherDiv.empty();
     forecastDiv.empty();
 
     queryURL =
-    "https://api.openweathermap.org/data/2.5/weather?q=" +
-    userCity +
-    "&appid=" +
-    APIkey +
-    units;
+      "https://api.openweathermap.org/data/2.5/weather?q=" +
+      userCity +
+      "&appid=" +
+      APIkey +
+      units;
     // AJAX - Calls the OpenWeather Current Weather Data API
     $.ajax({
       url: queryURL,
@@ -149,39 +147,37 @@ $(document).ready(function () {
         url: queryURL,
         method: "GET",
       }).then(function (response2) {
-
         displayCurrentWeather(response2, userCity);
         displayForecastWeather(response2.daily);
       });
     });
   }
 
-  function createPreviousCities(userCity){
+  // Function - Displays Previously Searched Cities
+  function createPreviousCities(userCity) {
     var previousCitiesBtn = $("<button class='list-group-item'></button");
     previousCitiesBtn.text(userCity);
     previousCitiesDiv.append(previousCitiesBtn);
 
-    previousCitiesBtn.on("click", function(event){
+    previousCitiesBtn.on("click", function (event) {
       userCity = $(this).text();
       ajax(userCity);
     });
   }
 
+  // Calls getLocalStorage Function
   getLocalStorage();
 
   // Event Listener - Listens to the Search Button
   searchBtn.on("click", function (event) {
     event.preventDefault();
 
-    if(userCity !== ""){
-      
-      userCity = userInput.val();
+    userCity = userInput.val();
+
+    if (userCity !== "" && userCityArray.includes(userCity) === false) {
       ajax(userCity);
-
-
       userCityArray.push(userCity);
       localStorage.setItem("City", JSON.stringify(userCityArray));
-
       createPreviousCities(userCity);
     }
   });
