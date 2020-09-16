@@ -1,7 +1,9 @@
+/* Styles the Navbar <span> */
 #span{
-    font-size: 25px;
+    font-size: 30px;
 }
 
+/* Style the UV Index <span> */
 #uvIndex{
     padding: 4px !important;
     color: white !important;

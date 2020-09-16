@@ -33,11 +33,7 @@ $(document).ready(function () {
     var cityHeader = $("<h3>");
     var date = convertDate(response.current.dt);
 
-    var weatherIconEl = $("<img>");
-    var weatherIcon = response.current.weather[0].icon;
-    var weatherIconURL =
-      "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
-    weatherIconEl.attr("src", weatherIconURL);
+    var weatherIconEl = displayWeatherIcon(response.current.weather[0].icon);
     cityHeader.text(userCity + " (" + date + ")").append(weatherIconEl);
     weatherDiv.append(cityHeader);
 
@@ -52,6 +48,15 @@ $(document).ready(function () {
     displayUVIndex(uvIndex);
   }
 
+  function displayWeatherIcon(weatherIcon) {
+    var weatherIconEl = $("<img>");
+    var weatherIconURL =
+    "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
+    weatherIconEl.attr("src", weatherIconURL);
+
+    return weatherIconEl;
+  }
+
   // Function - Displays the 5-Day Forecast for the User's City
   function displayForecastWeather(response) {
     var forecastHeader = $("<h3>5-Day Forecast:</h3>");
@@ -63,19 +68,12 @@ $(document).ready(function () {
       day.attr("style", "max-width: 8rem");
       var date = convertDate(response[i].dt);
       var dateHeader = $("<h5>" + date + "</h5>");
-      day.append(dateHeader);
 
-      var weatherIconEl = $("<img>");
-      var weatherIcon = response[i].weather[0].icon;
-      var weatherIconURL =
-        "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
-      weatherIconEl.attr("src", weatherIconURL);
-      day.append(weatherIconEl);
-
+      var weatherIconEl = displayWeatherIcon(response[i].weather[0].icon);
       var temp = $("<p> Temp: " + response[i].temp.day + "&deg;F</p>");
-      day.append(temp);
       var humidity = $("<p>Humidity: " + response[i].humidity + "%</p>");
-      day.append(humidity);
+      
+      day.append(dateHeader, weatherIconEl, temp, humidity);
       forecastDiv.append(day);
     }
   }
@@ -91,8 +89,6 @@ $(document).ready(function () {
       dateConversion.getFullYear();
     return date;
   }
-
-  function displayWeatherIcon(weatherIcon) {}
 
   // Function - Creates the UV Index Header, Sets the Background Color, and Displays it on the App
   function displayUVIndex(uvIndex) {
