@@ -34,7 +34,6 @@ This is an app that displays a weather dashboard based on data from the OpenWeat
 * Global and Local Variables
 * Functions
 * Event Listeners
-* Interval
 * if...else Statements
 * for Loops
 * Comments
@@ -69,7 +68,7 @@ This is an app that displays a weather dashboard based on data from the OpenWeat
 * Comments
 
 ## App Preview
-![Screenshot](picture.png)
+![Screenshot](weatherDashboard.png)
 
 ## Links
 * Website: https://zachdrummond.github.io/weather-dashboard/
