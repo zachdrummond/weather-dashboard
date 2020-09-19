@@ -2,9 +2,9 @@
 
 ## Table of Contents
 * [Description](#Description)
+* [Links](#Links)
 * [Design Elements](#Design-Elements)
 * [App Preview](#App-Preview)
-* [Links](#Links)
 * [Credits](#Credits)
 
 ## Description
@@ -14,6 +14,10 @@ This is an app that displays a weather dashboard based on data from the OpenWeat
 1. Enter a City Name
 2. Hit the Search Button
 3. Click a Previously Searched City
+
+## Links
+* Website: https://zachdrummond.github.io/weather-dashboard/
+* GitHub Repository: https://github.com/zachdrummond/weather-dashboard
 
 ## Design Elements
 ### *JavaScript*
@@ -69,10 +73,6 @@ This is an app that displays a weather dashboard based on data from the OpenWeat
 
 ## App Preview
 ![Screenshot](weatherDashboard.png)
-
-## Links
-* Website: https://zachdrummond.github.io/weather-dashboard/
-* GitHub Repository: https://github.com/zachdrummond/weather-dashboard
 
 ## Credits
 * OpenWeather API - https://openweathermap.org/api
